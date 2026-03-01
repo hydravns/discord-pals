@@ -52,7 +52,7 @@ def load_bot_configs() -> List[dict]:
                 "name": bot_cfg["name"],
                 "token": token,
                 "character_name": bot_cfg["character"],
-                "nicknames": bot_cfg.get("nicknames", "")  # Custom nicknames for this bot
+                "nicknames": bot_cfg.get("nicknames", "")
             })
         
         if bots:
@@ -64,7 +64,6 @@ def load_bot_configs() -> List[dict]:
         log.error("DISCORD_TOKEN not set!")
         return []
     
-    # Load nicknames from runtime_config for single-bot mode persistence
     bot_nicknames = runtime_config.get('bot_nicknames', {})
     default_nicknames = bot_nicknames.get('Default', '')
     
@@ -98,7 +97,7 @@ async def run_bots():
         dashboard_thread = start_dashboard(bots=instances, host='0.0.0.0', port=5000)
 
         if dashboard_thread and dashboard_thread.is_alive():
-            time.sleep(1)  # Give server time to fully start
+            time.sleep(1)
             try:
                 urllib.request.urlopen('http://127.0.0.1:5000/', timeout=2)
                 log.online("Dashboard running at http://localhost:5000")
@@ -113,8 +112,8 @@ async def run_bots():
         await asyncio.gather(*[bot.start() for bot in instances])
     except KeyboardInterrupt:
         log.info("Shutting down...")
-        save_history()  # Persist conversation history
-        memory_manager.save_all()  # Persist memories
+        save_history()
+        memory_manager.save_all()
         for bot in instances:
             await bot.close()
 
@@ -122,13 +121,5 @@ async def run_bots():
 # --- Entry Point ---
 
 if __name__ == "__main__":
-    # Run startup validation first
-    from startup import validate_startup
-    
-    if not validate_startup(interactive=True):
-        log.error("Startup validation failed. Please fix the issues above.")
-        import sys
-        sys.exit(1)
-    
     log.divider()
     asyncio.run(run_bots())
