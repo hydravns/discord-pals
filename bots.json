@@ -1,0 +1,9 @@
+{
+  "bots": [
+    {
+      "name": "Simone",
+      "token_env": "SIMONE_TOKEN",
+      "character": "Simone Strasser"
+    }
+  ]
+}
